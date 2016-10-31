@@ -1,4 +1,4 @@
-function [ A, Y, R ] = nnrdl( X, k, params )
+function [ A, Y, R ] = rnndl( X, k, params )
 %NNRDL Implementation of the Robust Non Negative Dictionary Learning
 % 
 % X: p*n matrix of observations (n observations of dimension p)
