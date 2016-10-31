@@ -4,11 +4,11 @@ function [ A, Y, R ] = rnndl( X, k, params )
 % X: p*n matrix of observations (n observations of dimension p)
 % k: size of the dictionary
 % Fields in the params structure:
-%   * epsilon: small constant added to stabilize W
+%   * ep: small constant added to stabilize W
 %   * beta: beta in the paper
 %   * alpha: alpha in the paper
 %   * threshold: convergence threshold
-%   * maxiter: maximum number of iterations
+%   * MAXITER: maximum number of iterations
 %   * y_eps: constant added to Y in the initialization
 % 
 % Robust Non-Negative Dictionary Learning
@@ -29,7 +29,7 @@ if nargin < 2
 end
     
 % Epsilon in W
-if nargin < 3 || ~isfield(params, 'epsilon')
+if nargin < 3 || ~isfield(params, 'ep')
     params.ep = eps;
 end
 
@@ -69,7 +69,7 @@ while err > params.threshold && it <= params.MAXITER
     A = A .* ( ( (X .* W)*Y' ) ./ ( ((A*Y) .* W)*Y' + 2*params.beta*A ) );
     
     % Update Y: Should it use the same W as A? Comment for comparison
-    W = 1 ./ sqrt( (X - A*Y).^2 + params.ep .^ 2 );
+%     W = 1 ./ sqrt( (X - A*Y).^2 + params.ep .^ 2 );
     Y = Y .* ( ( A'*(X .* W) ) ./ (A'*((A*Y) .* W) + params.alpha*E) );
     
     % Compute the relative l2 difference between two consecutive
@@ -79,7 +79,7 @@ while err > params.threshold && it <= params.MAXITER
     
     % Display some information
     it = it + 1;
-    fprintf('[%d] Err = %f\n', it, err);
+    fprintf('[%d] Delta A*Y = %f\n', it, err);
 end
 
 end
