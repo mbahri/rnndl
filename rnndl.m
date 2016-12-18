@@ -1,4 +1,4 @@
-function [ A, Y, R ] = rnndl( X, k, params )
+function [ Data, Info ] = rnndl( X, k, params )
 %NNRDL Implementation of the Robust Non Negative Dictionary Learning
 % 
 % X: p*n matrix of observations (n observations of dimension p)
@@ -59,6 +59,7 @@ end
 
 %% Algorithm
 err = inf;
+errs = [];
 it = 0;
 while err > params.threshold && it <= params.MAXITER
     % For convergence
@@ -76,11 +77,18 @@ while err > params.threshold && it <= params.MAXITER
     % reconstructions
     R = A*Y;
     err = norm(R - P, 'fro') / norm(P, 'fro');
+    errs = [ errs err];
     
     % Display some information
     it = it + 1;
     fprintf('[%d] Delta A*Y = %f\n', it, err);
 end
+
+Data.R = R;
+Data.Y = Y;
+Data.A = A;
+Info.err = errs;
+Info.iter = 1:it;
 
 end
 
